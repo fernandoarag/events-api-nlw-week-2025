@@ -1,11 +1,35 @@
 spring:
   application:
     name: Events - API
+  sql:
+    init:
+      mode: always
   datasource:
     username: ${MYSQL_USER:root}
     password: ${MYSQL_ROOT_PASSWORD:mysql}
     url: jdbc:mysql://localhost:3306/db_events
   jpa:
     properties:
-        hibernate:
-            dialect: org.hibernate.dialect.MySQLDialect
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        show_sql: true
+#        format_sql: true
+    show-sql: true
+springdoc:
+  packages-to-scan: br.com.nlw.events.interfaces.rest
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+# Logging
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql: TRACE
+server:
+  servlet:
+    context-path: /api/v1
+api:
+  path:
+    web:
+      url: http://localhost:3000

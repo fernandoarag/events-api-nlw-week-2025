@@ -1,8 +1,0 @@
-package br.com.nlw.events.repo;
-
-import br.com.nlw.events.model.Event;
-import org.springframework.data.repository.CrudRepository;
-
-public interface EventRepository extends CrudRepository<Event, Integer> {
-    Event findByPrettyName(final String prettyName);
-}
