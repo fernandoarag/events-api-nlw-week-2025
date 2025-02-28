@@ -20,12 +20,7 @@ public class SearchForUserByEmailAndRegisterIfNotFoundImpl implements SearchForU
         if (user.getEmail() == null) {
             throw new IllegalArgumentException("Email cannot be null!");
         }
-//        final User existingUser = userGateway.findUserByEmail(user.getEmail()).orElse(null);
-//        if (existingUser == null) {
-//            final Invite invite = new Invite(0, event, user);
-//            inviteGateway.save(invite);
-//            return userGateway.updateInviteLink(user);
-//        }
+
         return userGateway.findUserByEmail(user.getEmail()).orElse(null);
     }
 }

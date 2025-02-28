@@ -7,9 +7,10 @@ import br.com.nlw.events.infrastructure.repository.EventRepository;
 import br.com.nlw.events.interfaces.gateway.database.EventGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -27,8 +28,9 @@ public class EventJpaGateway implements EventGateway {
     }
 
     @Override
-    public List<Event> findAll() {
-        return eventRepository.findAll().stream().map(eventMapper::toDomain).toList();
+    public Page<Event> findAll(Pageable pageable) {
+        return eventRepository.findAll(pageable)
+                .map(eventMapper::toDomain);
     }
 
     @Override

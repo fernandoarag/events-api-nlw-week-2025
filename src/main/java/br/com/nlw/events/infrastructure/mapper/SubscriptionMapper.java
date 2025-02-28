@@ -16,14 +16,18 @@ public class SubscriptionMapper {
         final User subscriber = entity.getSubscriber() != null
                 ? new User(
                 entity.getSubscriber().getId(),
-                entity.getSubscriber().getName(),
-                entity.getSubscriber().getEmail())
+                entity.getSubscriber().getUsername(),
+                entity.getSubscriber().getEmail(),
+                entity.getSubscriber().getPassword(),
+                entity.getSubscriber().getRole())
                 : null;
         final User indication = entity.getIndication() != null
                 ? new User(
                 entity.getIndication().getId(),
-                entity.getIndication().getName(),
-                entity.getIndication().getEmail())
+                entity.getIndication().getUsername(),
+                entity.getIndication().getEmail(),
+                entity.getIndication().getPassword(),
+                entity.getIndication().getRole())
                 : null;
         return new Subscription(
                 entity.getSubscriptionNumber(),
@@ -50,14 +54,18 @@ public class SubscriptionMapper {
         final UserEntity subscriber = subscription.getSubscriber() != null
                 ? new UserEntity(
                 subscription.getSubscriber().getId(),
-                subscription.getSubscriber().getName(),
-                subscription.getSubscriber().getEmail())
+                subscription.getSubscriber().getUsername(),
+                subscription.getSubscriber().getEmail(),
+                subscription.getSubscriber().getPassword(),
+                subscription.getSubscriber().getRole())
                 : null;
         final UserEntity indication = subscription.getIndication() != null
                 ? new UserEntity(
                 subscription.getIndication().getId(),
-                subscription.getIndication().getName(),
-                subscription.getIndication().getEmail())
+                subscription.getIndication().getUsername(),
+                subscription.getIndication().getEmail(),
+                subscription.getIndication().getPassword(),
+                subscription.getIndication().getRole())
                 : null;
         return new SubscriptionEntity(
                 new EventEntity(

@@ -19,6 +19,6 @@ public class UserRestAdapter {
         if (saved == null) {
             return null;
         }
-        return new UserResponseDTO(saved.getId(), saved.getName(), saved.getEmail());
+        return new UserResponseDTO(saved.getId(), saved.getUsername(), saved.getEmail());
     }
 }

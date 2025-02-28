@@ -25,7 +25,7 @@ public class FindSubscriptionByEventAndSubscriberUseCaseImpl implements FindSubs
             throw new IllegalArgumentException("User cannot be null");
         }
         if (subscriptionGateway.findByEventAndSubscriber(event, existingUser) != null) {
-            throw new SubscriptionConflictException("There is already a registration for the user: '" + existingUser.getName() + "', in the event '" + event.getTitle() + "'");
+            throw new SubscriptionConflictException("There is already a registration for the user: '" + existingUser.getUsername() + "', in the event '" + event.getTitle() + "'");
         }
     }
 }

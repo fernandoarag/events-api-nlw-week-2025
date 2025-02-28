@@ -1,21 +1,21 @@
 package br.com.nlw.events.domain.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
     private Integer id;
-    private String name;
+    private String username;
+    private String password;
     private String email;
+    private String role; // ROLE_USER, ROLE_ADMIN, etc.
 
-    public User(String name, String email) {
-        this.name = name;
+    public User(String username, String email) {
+        this.username = username;
         this.email = email;
     }
 }

@@ -33,3 +33,8 @@ api:
   path:
     web:
       url: http://localhost:3000
+application:
+  security:
+    jwt:
+      secret-key: 5b0848b3c216b781451ea039d311845768b39ecd4ac9ef5c91b5e8f1594d8d89
+      expiration: 86400000 # um dia em milissegundos

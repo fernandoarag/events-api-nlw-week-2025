@@ -28,8 +28,10 @@ public class InviteMapper {
         );
         final User subscriber = new User(
                 entity.getSubscriber().getId(),
-                entity.getSubscriber().getName(),
-                entity.getSubscriber().getEmail()
+                entity.getSubscriber().getUsername(),
+                entity.getSubscriber().getEmail(),
+                entity.getSubscriber().getPassword(),
+                entity.getSubscriber().getRole()
         );
         return new Invite(
                 entity.getInviteId(),
@@ -56,8 +58,10 @@ public class InviteMapper {
         );
         final UserEntity subscriber = new UserEntity(
                 invite.getSubscriber().getId(),
-                invite.getSubscriber().getName(),
-                invite.getSubscriber().getEmail()
+                invite.getSubscriber().getUsername(),
+                invite.getSubscriber().getEmail(),
+                invite.getSubscriber().getPassword(),
+                invite.getSubscriber().getRole()
         );
         return new InviteEntity(
                 invite.getInviteId(),

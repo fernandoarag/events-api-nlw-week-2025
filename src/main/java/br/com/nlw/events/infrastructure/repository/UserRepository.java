@@ -9,4 +9,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     Optional<UserEntity> findUserEntityByEmail(final String email);
 
     Optional<UserEntity> findUserEntityById(final Integer id);
+
+    Optional<UserEntity> findByUsername(String username);
+
+    Optional<UserEntity> findUserEntityByUsername(final String username);
 }
+
+

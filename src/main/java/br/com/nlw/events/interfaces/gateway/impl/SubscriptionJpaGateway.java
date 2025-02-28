@@ -43,7 +43,7 @@ public class SubscriptionJpaGateway implements SubscriptionGateway {
                 .orElseThrow(() -> new EventNotFoundException("Event: " + event.getPrettyName() + DOES_NOT_EXIST));
 
         final UserEntity existingUserEntity = userRepository.findById(existingUser.getId())
-                .orElseThrow(() -> new UserIndicationNotFoundException("User: " + existingUser.getName() + DOES_NOT_EXIST));
+                .orElseThrow(() -> new UserIndicationNotFoundException("User: " + existingUser.getUsername() + DOES_NOT_EXIST));
 
         return subscriptionRepository.findByEventAndSubscriber(eventEntity, existingUserEntity)
                 .map(subscriptionMapper::toDomain)

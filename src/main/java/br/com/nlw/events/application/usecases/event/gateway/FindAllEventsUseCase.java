@@ -1,9 +1,10 @@
 package br.com.nlw.events.application.usecases.event.gateway;
 
 import br.com.nlw.events.domain.model.Event;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FindAllEventsUseCase {
-    List<Event> execute();
+    //    List<Event> execute();
+    Page<Event> execute(Pageable pageable);
 }
