@@ -3,8 +3,8 @@ package br.com.nlw.events.interfaces.rest;
 import br.com.nlw.events.application.usecases.subscription.gateway.CreateSubscriptionUseCase;
 import br.com.nlw.events.application.usecases.subscription.gateway.GetCompleteSubscriptionRankingByPrettyNameUseCase;
 import br.com.nlw.events.application.usecases.subscription.gateway.GetRankingByUserUseCase;
-import br.com.nlw.events.domain.model.Subscription;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.Subscription;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.adapter.CreateSubscriptionRestAdapter;
 import br.com.nlw.events.interfaces.dtos.subscription.SubscriptionRankingByUser;
 import br.com.nlw.events.interfaces.dtos.subscription.SubscriptionRankingItem;
@@ -40,7 +40,7 @@ public class SubscriptionController {
     @PostMapping({"/{eventPrettyName}", "/{eventPrettyName}/{userIndicatorId}"})
     public ResponseEntity<SubscriptionResponseDTO> createNewSubscription(
             @PathVariable final String eventPrettyName,
-            @PathVariable(required = false) final Integer userIndicatorId,
+            @PathVariable(required = false) final Long userIndicatorId,
             @RequestBody final UserRequestDTO userRequest
     ) {
         final User userReq = createSubscriptionRestAdapter.toDomain(userRequest);

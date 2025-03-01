@@ -2,7 +2,7 @@ package br.com.nlw.events.application.usecases.event.impl;
 
 import br.com.nlw.events.application.exception.custom.EventNotFoundException;
 import br.com.nlw.events.application.usecases.event.gateway.FindEventByPrettyNameUseCase;
-import br.com.nlw.events.domain.model.Event;
+import br.com.nlw.events.domain.models.Event;
 import br.com.nlw.events.interfaces.gateway.database.EventGateway;
 import org.springframework.stereotype.Service;
 

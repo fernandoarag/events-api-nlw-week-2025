@@ -1,7 +1,7 @@
 package br.com.nlw.events.application.usecases.invite.impl;
 
 import br.com.nlw.events.application.usecases.invite.gateway.CreateInviteUseCase;
-import br.com.nlw.events.domain.model.Invite;
+import br.com.nlw.events.domain.models.Invite;
 import br.com.nlw.events.interfaces.gateway.database.InviteGateway;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +22,7 @@ public class CreateInviteUseCaseImpl implements CreateInviteUseCase {
         if (invite.getEvent() == null) {
             throw new IllegalArgumentException("Event cannot be null!");
         }
-        if (invite.getEvent().getEventId() == null) {
+        if (invite.getEvent().getId() == null) {
             throw new IllegalArgumentException("EventId cannot be null!");
         }
         if (invite.getSubscriber() == null) {

@@ -1,4 +1,4 @@
-package br.com.nlw.events.domain.model;
+package br.com.nlw.events.domain.enums;
 
 import lombok.Getter;
 

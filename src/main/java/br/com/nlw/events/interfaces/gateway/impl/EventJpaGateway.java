@@ -1,9 +1,9 @@
 package br.com.nlw.events.interfaces.gateway.impl;
 
-import br.com.nlw.events.domain.model.Event;
+import br.com.nlw.events.domain.models.Event;
 import br.com.nlw.events.infrastructure.entity.EventEntity;
 import br.com.nlw.events.infrastructure.mapper.EventMapper;
-import br.com.nlw.events.infrastructure.repository.EventRepository;
+import br.com.nlw.events.infrastructure.repositories.EventRepository;
 import br.com.nlw.events.interfaces.gateway.database.EventGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

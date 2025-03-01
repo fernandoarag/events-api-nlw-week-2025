@@ -1,7 +1,7 @@
 package br.com.nlw.events.application.usecases.user.impl;
 
 import br.com.nlw.events.application.usecases.user.gateway.CreateUserUseCase;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.gateway.database.UserGateway;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +22,7 @@ public class CreateUserUseCaseImpl implements CreateUserUseCase {
         userGateway.findUserByEmail(user.getEmail()).ifPresent(u -> {
             throw new IllegalArgumentException("User with email " + u.getEmail() + " already exists!");
         });
+
         return userGateway.save(user);
     }
 }

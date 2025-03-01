@@ -1,6 +1,6 @@
 package br.com.nlw.events.interfaces.dtos.event;
 
-import br.com.nlw.events.domain.model.Event;
+import br.com.nlw.events.domain.models.Event;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

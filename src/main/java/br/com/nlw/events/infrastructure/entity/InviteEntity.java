@@ -1,31 +1,30 @@
 package br.com.nlw.events.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import java.util.UUID;
 
 @Entity
-@Table(name = "tbl_invite")
 @Getter
 @Setter
+@ToString(exclude = {"event", "subscriber"})
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "tbl_invites")
 public class InviteEntity {
 
     @Id
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "invite_id", columnDefinition = "VARCHAR(36)")
-    private UUID inviteId;
+    @Column(name = "id", columnDefinition = "VARCHAR(36)")
+    private UUID id;
 
-    @Column(name = "invite_hits")
-    private Integer hits;
+    @Column(name = "hits", nullable = false)
+    private Long hits = 0L;
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)

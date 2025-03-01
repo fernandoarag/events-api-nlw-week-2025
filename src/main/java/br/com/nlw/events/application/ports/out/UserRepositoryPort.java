@@ -1,6 +1,6 @@
 package br.com.nlw.events.application.ports.out;
 
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.User;
 
 import java.util.Optional;
 

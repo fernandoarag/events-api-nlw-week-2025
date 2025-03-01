@@ -14,7 +14,7 @@ public class IncrementInviteHintByPrettyNameAndUserIdUseCaseImpl implements Incr
         this.inviteGateway = inviteGateway;
     }
 
-    public void execute(final String eventPrettyName, final Integer userId) {
+    public void execute(final String eventPrettyName, final Long userId) {
         if (eventPrettyName == null) {
             throw new IllegalArgumentException("Event Pretty Name cannot be null!");
         }

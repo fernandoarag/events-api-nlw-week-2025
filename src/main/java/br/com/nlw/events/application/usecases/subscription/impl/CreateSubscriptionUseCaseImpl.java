@@ -5,17 +5,15 @@ import br.com.nlw.events.application.usecases.invite.gateway.CreateInviteUseCase
 import br.com.nlw.events.application.usecases.subscription.gateway.CreateSubscriptionUseCase;
 import br.com.nlw.events.application.usecases.subscription.gateway.FindSubscriptionByEventAndSubscriberUseCase;
 import br.com.nlw.events.application.usecases.user.gateway.CreateUserUseCase;
-import br.com.nlw.events.domain.model.Event;
-import br.com.nlw.events.domain.model.Invite;
-import br.com.nlw.events.domain.model.Subscription;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.Event;
+import br.com.nlw.events.domain.models.Invite;
+import br.com.nlw.events.domain.models.Subscription;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.gateway.database.EventGateway;
 import br.com.nlw.events.interfaces.gateway.database.SubscriptionGateway;
 import br.com.nlw.events.interfaces.gateway.database.UserGateway;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -43,7 +41,7 @@ public class CreateSubscriptionUseCaseImpl implements CreateSubscriptionUseCase 
     }
 
     @Override
-    public Subscription execute(final String prettyName, final Integer userIndicatorId, final User userRequest) {
+    public Subscription execute(final String prettyName, final Long userIndicatorId, final User userRequest) {
         // Recuperar o evento pelo nome
         final Event event = eventGateway.findByPrettyName(prettyName)
                 .orElseThrow(() -> new EventNotFoundException("Event: " + prettyName + ", does not exist!"));
@@ -54,7 +52,7 @@ public class CreateSubscriptionUseCaseImpl implements CreateSubscriptionUseCase 
                     // Criar novo usuário
                     final User newUser = createUserUseCase.execute(userRequest);
                     // Criar convite para o novo usuário
-                    createInviteUseCase.execute(new Invite(0, event, newUser));
+                    createInviteUseCase.execute(new Invite(0L, event, newUser));
                     return newUser;
                 });
 

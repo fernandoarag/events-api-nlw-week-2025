@@ -1,7 +1,7 @@
 package br.com.nlw.events.interfaces.adapter;
 
-import br.com.nlw.events.domain.model.Subscription;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.Subscription;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.dtos.subscription.SubscriptionResponseDTO;
 import br.com.nlw.events.interfaces.dtos.user.UserRequestDTO;
 import org.springframework.stereotype.Component;
@@ -13,7 +13,7 @@ public class CreateSubscriptionRestAdapter {
         if (dto == null) {
             return null;
         }
-        return new User(dto.name(), dto.email());
+        return new User(dto.username(), dto.password(), dto.email());
     }
 
     public SubscriptionResponseDTO toResponse(Subscription saved) {

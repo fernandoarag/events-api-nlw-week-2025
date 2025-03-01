@@ -1,28 +1,28 @@
 package br.com.nlw.events.infrastructure.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.UUID;
+import lombok.*;
 
 @Entity
-@Table(name = "tbl_subscription")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString(exclude = {"event", "subscriber", "indication"})
+@Table(name = "tbl_subscriptions")
 public class SubscriptionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "subscription_number")
-    private Integer subscriptionNumber;
+    private Long subscriptionNumber;
 
     @ManyToOne
-    @JoinColumn(name = "event_id")
+    @JoinColumn(name = "event_id", nullable = false)
     private EventEntity event;
 
     @ManyToOne
-    @JoinColumn(name = "subscribed_user_id")
+    @JoinColumn(name = "subscribed_user_id", nullable = false)
     private UserEntity subscriber;
 
     @ManyToOne
@@ -35,6 +35,4 @@ public class SubscriptionEntity {
         this.indication = indication;
     }
 
-    public SubscriptionEntity() {
-    }
 }

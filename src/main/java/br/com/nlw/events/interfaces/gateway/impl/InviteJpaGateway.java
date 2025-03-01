@@ -1,10 +1,10 @@
 package br.com.nlw.events.interfaces.gateway.impl;
 
-import br.com.nlw.events.domain.model.Invite;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.Invite;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.infrastructure.entity.InviteEntity;
 import br.com.nlw.events.infrastructure.mapper.InviteMapper;
-import br.com.nlw.events.infrastructure.repository.InviteRepository;
+import br.com.nlw.events.infrastructure.repositories.InviteRepository;
 import br.com.nlw.events.interfaces.gateway.database.InviteGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,13 +31,13 @@ public class InviteJpaGateway implements InviteGateway {
     }
 
     @Override
-    public Integer getHints(final String eventPrettyName, final Integer userId) {
-        return inviteRepository.getHints(eventPrettyName, userId).orElse(0);
+    public Long getHints(final String eventPrettyName, final Long userId) {
+        return inviteRepository.getHints(eventPrettyName, userId).orElse(0L);
     }
 
     @Override
     @Transactional
-    public void incrementHint(final String eventPrettyName, final Integer userId) {
+    public void incrementHint(final String eventPrettyName, final Long userId) {
         inviteRepository.incrementHint(eventPrettyName, userId);
     }
 }

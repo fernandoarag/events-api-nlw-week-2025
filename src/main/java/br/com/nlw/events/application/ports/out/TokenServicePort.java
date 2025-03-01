@@ -1,13 +1,18 @@
 package br.com.nlw.events.application.ports.out;
 
-import java.util.Map;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.List;
 
 public interface TokenServicePort {
-    String generateToken(String username);
+    String generateToken(Authentication authentication);
 
-    String generateToken(String username, Map<String, Object> extraClaims);
+    String generateRefreshToken(UserDetails userDetails);
 
-    boolean isTokenValid(String token, String username);
+    boolean isTokenValid(String token, UserDetails userDetails);
 
     String extractUsername(String token);
+
+    List<String> extractRoles(String token);
 }

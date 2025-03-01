@@ -18,9 +18,9 @@ public class InviteController {
     }
 
     @GetMapping("/hints/{eventPrettyName}/{userId}")
-    public ResponseEntity<Integer> getHints(
+    public ResponseEntity<Long> getHints(
             @PathVariable String eventPrettyName,
-            @PathVariable Integer userId
+            @PathVariable Long userId
     ) {
         return ResponseEntity.ok(getInviteHintsByPrettyNameAndUserIdUseCase.execute(eventPrettyName, userId));
     }
@@ -28,7 +28,7 @@ public class InviteController {
     @PatchMapping("/hints/{eventPrettyName}/{userId}")
     public ResponseEntity<?> updateHints(
             @PathVariable String eventPrettyName,
-            @PathVariable Integer userId
+            @PathVariable Long userId
     ) {
         incrementInviteHintByPrettyNameAndUserIdUseCase.execute(eventPrettyName, userId);
         return ResponseEntity.noContent().build();

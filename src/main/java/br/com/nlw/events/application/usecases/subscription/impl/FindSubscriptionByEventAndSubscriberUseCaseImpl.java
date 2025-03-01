@@ -2,8 +2,8 @@ package br.com.nlw.events.application.usecases.subscription.impl;
 
 import br.com.nlw.events.application.exception.custom.SubscriptionConflictException;
 import br.com.nlw.events.application.usecases.subscription.gateway.FindSubscriptionByEventAndSubscriberUseCase;
-import br.com.nlw.events.domain.model.Event;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.Event;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.gateway.database.SubscriptionGateway;
 import org.springframework.stereotype.Service;
 

@@ -2,7 +2,7 @@ package br.com.nlw.events.application.usecases.event.impl;
 
 import br.com.nlw.events.application.exception.custom.EventAlreadyExistsException;
 import br.com.nlw.events.application.usecases.event.gateway.CreateEventUseCase;
-import br.com.nlw.events.domain.model.Event;
+import br.com.nlw.events.domain.models.Event;
 import br.com.nlw.events.interfaces.gateway.database.EventGateway;
 import org.springframework.stereotype.Service;
 

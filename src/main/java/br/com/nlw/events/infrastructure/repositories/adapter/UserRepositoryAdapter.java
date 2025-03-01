@@ -1,9 +1,10 @@
-package br.com.nlw.events.infrastructure.repository;
+package br.com.nlw.events.infrastructure.repositories.adapter;
 
 import br.com.nlw.events.application.ports.out.UserRepositoryPort;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.infrastructure.entity.UserEntity;
 import br.com.nlw.events.infrastructure.mapper.UserMapper;
+import br.com.nlw.events.infrastructure.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

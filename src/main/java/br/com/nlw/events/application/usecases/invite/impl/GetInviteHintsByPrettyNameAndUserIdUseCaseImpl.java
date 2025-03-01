@@ -13,7 +13,7 @@ public class GetInviteHintsByPrettyNameAndUserIdUseCaseImpl implements GetInvite
         this.inviteGateway = inviteGateway;
     }
 
-    public Integer execute(final String eventPrettyName, final Integer userId) {
+    public Long execute(final String eventPrettyName, final Long userId) {
         if (eventPrettyName == null) {
             throw new IllegalArgumentException("Event Pretty Name cannot be null!");
         }

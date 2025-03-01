@@ -1,27 +1,24 @@
 package br.com.nlw.events.infrastructure.entity;
 
-import br.com.nlw.events.domain.model.EventType;
+import br.com.nlw.events.domain.enums.EventType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
-@Table(name = "tbl_event")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "tbl_events")
 public class EventEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "event_id")
-    private Integer eventId;
+    private Long id;
 
     @Column(name = "title", length = 255, nullable = false)
     private String title;
