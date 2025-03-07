@@ -5,10 +5,7 @@ import br.com.nlw.events.application.usecases.user.gateway.FindUserByUsernameUse
 import br.com.nlw.events.application.usecases.user.gateway.UpdateUserUseCase;
 import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.adapter.UserRestAdapter;
-import br.com.nlw.events.interfaces.dtos.auth.AuthRequestDTO;
-import br.com.nlw.events.interfaces.dtos.auth.AuthResponseDTO;
-import br.com.nlw.events.interfaces.dtos.auth.RefreshTokenRequestDTO;
-import br.com.nlw.events.interfaces.dtos.auth.RegisterRequestDTO;
+import br.com.nlw.events.interfaces.dtos.auth.*;
 import br.com.nlw.events.interfaces.dtos.user.UserRequestDTO;
 import br.com.nlw.events.interfaces.dtos.user.UserResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -46,10 +43,18 @@ public class AuthController {
         return ResponseEntity.ok(authResponseDTO);
     }
 
+    @PostMapping("/login/email")
+    public ResponseEntity<AuthResponseDTO> authenticateEmail(@RequestBody AuthEmailRequestDTO request) {
+        AuthResponseDTO authResponseDTO = authenticationUseCase.authenticateWithEmail(request);
+        return ResponseEntity.ok(authResponseDTO);
+    }
+
     @PutMapping("/update/{id}")
-    public ResponseEntity<UserResponseDTO> updateUser(@PathVariable Long id,
-                                                      @RequestBody UserRequestDTO userDto,
-                                                      Principal principal) throws NoPermissionException {
+    public ResponseEntity<UserResponseDTO> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserRequestDTO userDto,
+            Principal principal
+    ) throws NoPermissionException {
         // Obtendo o usuário autenticado
         final String loggedInUsername = principal.getName();
         final User authenticatedUser = findUserByUsernameUseCase.execute(loggedInUsername);

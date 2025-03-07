@@ -6,10 +6,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -19,7 +20,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @ToString(exclude = "roles")
 @Table(name = "tbl_users")
-public class UserEntity implements UserDetails {
+public class UserEntity implements UserDetails, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +32,7 @@ public class UserEntity implements UserDetails {
     @Column(length = 100, nullable = false, unique = true)
     private String username;
 
-    @Column(length = 100, nullable = false, unique = true)
+    @Column(length = 100, nullable = false, unique = false)
     private String password;
 
     @Column(length = 100, nullable = false, unique = true)
@@ -48,7 +52,7 @@ public class UserEntity implements UserDetails {
         if (roles != null && !roles.isEmpty()) {
             return roles.stream()
                     .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))  // Associe as roles com o prefixo 'ROLE_'
-                    .collect(Collectors.toList());
+                    .toList();
         }
         return Collections.emptyList();  // Retorna uma lista vazia se não houver roles
     }

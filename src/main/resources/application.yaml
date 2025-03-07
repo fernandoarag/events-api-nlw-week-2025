@@ -29,10 +29,6 @@ logging:
 server:
   servlet:
     context-path: /api/v1
-api:
-  path:
-    web:
-      url: http://localhost:3000
 application:
   security:
     jwt:

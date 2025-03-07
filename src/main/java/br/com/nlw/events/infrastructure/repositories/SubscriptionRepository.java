@@ -7,10 +7,12 @@ import br.com.nlw.events.interfaces.dtos.subscription.SubscriptionRankingItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, Long> {
     Optional<SubscriptionEntity> findByEventAndSubscriber(final EventEntity event, final UserEntity existingUser);
 

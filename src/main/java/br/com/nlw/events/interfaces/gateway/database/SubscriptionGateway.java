@@ -10,6 +10,8 @@ import java.util.List;
 public interface SubscriptionGateway {
     Subscription save(final Subscription subscription);
 
+    Subscription saveSubscriptionWithEvent(final Subscription subscription);
+
     Subscription findByEventAndSubscriber(final Event event, final User existingUser);
 
     List<SubscriptionRankingItem> getCompleteRanking(final Long eventId);

@@ -8,7 +8,9 @@ public interface InviteGateway {
 
     Invite findInviteBySubscriberId(final User subscriber);
 
+    Invite findInviteEntityBySubscriberIdAndEventId(Long subscriberId, Long eventId);
+
     Long getHints(final String eventPrettyName, final Long userId);
 
-    void incrementHint(final String eventPrettyName, final Long userId);
+    void incrementHint(final Long subscriptionNumber);
 }

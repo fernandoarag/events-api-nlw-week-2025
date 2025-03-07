@@ -15,10 +15,13 @@ import br.com.nlw.events.infrastructure.repositories.UserRepository;
 import br.com.nlw.events.interfaces.dtos.subscription.SubscriptionRankingItem;
 import br.com.nlw.events.interfaces.gateway.database.SubscriptionGateway;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SubscriptionJpaGateway implements SubscriptionGateway {
@@ -33,6 +36,22 @@ public class SubscriptionJpaGateway implements SubscriptionGateway {
     @Override
     public Subscription save(final Subscription subscription) {
         final SubscriptionEntity subscriptionEntity = subscriptionMapper.toEntity(subscription);
+        return subscriptionMapper.toDomain(subscriptionRepository.save(subscriptionEntity));
+    }
+
+    @Transactional
+    @Override
+    public Subscription saveSubscriptionWithEvent(final Subscription subscription) {
+        final SubscriptionEntity subscriptionEntity = subscriptionMapper.toEntity(subscription);
+        log.warn("SubscriptionEntity: *************************************************************{}", subscriptionEntity);
+
+        final EventEntity eventEntity = subscriptionEntity.getEvent();
+        log.warn("EventEntity: *************************************************************{}", eventEntity);
+
+        if (eventEntity != null && eventEntity.getId() == null) {
+            subscriptionEntity.setEvent(eventRepository.save(eventEntity));
+            log.warn("eventEntity.getId() == null: *************************************************************{}", subscriptionEntity);
+        }
         return subscriptionMapper.toDomain(subscriptionRepository.save(subscriptionEntity));
     }
 

@@ -3,8 +3,10 @@ package br.com.nlw.events.application.usecases.invite.impl;
 import br.com.nlw.events.application.usecases.invite.gateway.GetInviteHintsByPrettyNameAndUserIdUseCase;
 import br.com.nlw.events.application.usecases.invite.gateway.IncrementInviteHintByPrettyNameAndUserIdUseCase;
 import br.com.nlw.events.interfaces.gateway.database.InviteGateway;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class IncrementInviteHintByPrettyNameAndUserIdUseCaseImpl implements IncrementInviteHintByPrettyNameAndUserIdUseCase {
 
@@ -14,13 +16,10 @@ public class IncrementInviteHintByPrettyNameAndUserIdUseCaseImpl implements Incr
         this.inviteGateway = inviteGateway;
     }
 
-    public void execute(final String eventPrettyName, final Long userId) {
-        if (eventPrettyName == null) {
-            throw new IllegalArgumentException("Event Pretty Name cannot be null!");
-        }
-        if (userId == null) {
+    public void execute(final Long subscriptionNumber) {
+        if (subscriptionNumber == null) {
             throw new IllegalArgumentException("userId cannot be null!");
         }
-        inviteGateway.incrementHint(eventPrettyName, userId);
+        inviteGateway.incrementHint(subscriptionNumber);
     }
 }

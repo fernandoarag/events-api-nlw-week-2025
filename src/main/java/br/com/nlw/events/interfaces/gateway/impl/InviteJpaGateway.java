@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -21,13 +23,20 @@ public class InviteJpaGateway implements InviteGateway {
 
     @Override
     public Invite save(final Invite invite) {
+        log.warn("InviteJpaGateway.save: {}", invite);
         final InviteEntity inviteEntity = inviteMapper.toEntity(invite);
         return inviteMapper.toDomain(inviteRepository.save(inviteEntity));
     }
 
     @Override
     public Invite findInviteBySubscriberId(final User subscriber) {
-        return inviteRepository.findInviteEntityBySubscriberId(subscriber.getId());
+        return inviteMapper.toDomain(inviteRepository.findInviteEntityBySubscriberId(subscriber.getId()));
+    }
+
+    @Override
+    public Invite findInviteEntityBySubscriberIdAndEventId(Long subscriberId, Long eventId) {
+        final InviteEntity inviteEntity = inviteRepository.findInviteEntityBySubscriberIdAndEventId(subscriberId, eventId).orElse(null);
+        return inviteMapper.toDomain(inviteEntity);
     }
 
     @Override
@@ -37,7 +46,7 @@ public class InviteJpaGateway implements InviteGateway {
 
     @Override
     @Transactional
-    public void incrementHint(final String eventPrettyName, final Long userId) {
-        inviteRepository.incrementHint(eventPrettyName, userId);
+    public void incrementHint(final Long subscriptionNumber) {
+        inviteRepository.incrementHint(subscriptionNumber);
     }
 }

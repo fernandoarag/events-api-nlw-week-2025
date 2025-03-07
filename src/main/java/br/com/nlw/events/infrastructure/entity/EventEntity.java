@@ -51,16 +51,4 @@ public class EventEntity {
     @Column(name = "end_time")
     private LocalTime endTime;
 
-    public EventEntity(String title, String about, EventType eventType, String prettyName, String location, Double price, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
-        this.title = title;
-        this.about = about;
-        this.eventType = eventType;
-        this.prettyName = prettyName;
-        this.location = location;
-        this.price = price;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
 }

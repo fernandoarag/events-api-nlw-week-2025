@@ -27,6 +27,7 @@ public class EventMapper {
     public EventEntity toEntity(Event event) {
         if (event == null) return null;
         return new EventEntity(
+                event.getId(),
                 event.getTitle(),
                 event.getAbout(),
                 event.getEventType(),

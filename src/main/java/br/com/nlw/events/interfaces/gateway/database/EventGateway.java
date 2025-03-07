@@ -1,6 +1,7 @@
 package br.com.nlw.events.interfaces.gateway.database;
 
 import br.com.nlw.events.domain.models.Event;
+import br.com.nlw.events.infrastructure.repositories.filter.EventFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,4 +13,6 @@ public interface EventGateway {
     Page<Event> findAll(Pageable pageable);
 
     Optional<Event> findByPrettyName(final String prettyName);
+
+    Page<Event> filter(EventFilter eventFilter, Pageable pageable);
 }

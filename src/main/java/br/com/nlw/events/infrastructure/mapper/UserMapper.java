@@ -2,11 +2,14 @@ package br.com.nlw.events.infrastructure.mapper;
 
 import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.infrastructure.entity.UserEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
 
+    private static final Logger log = LoggerFactory.getLogger(UserMapper.class);
     private final RoleMapper roleMapper;
 
     public UserMapper(RoleMapper roleMapper) {
@@ -15,6 +18,7 @@ public class UserMapper {
 
     public User toDomain(UserEntity entity) {
         if(entity == null) return null;
+        log.warn("UserMapper.toDomain: {}", entity);
         return new User(
                 entity.getId(),
                 entity.getUsername(),

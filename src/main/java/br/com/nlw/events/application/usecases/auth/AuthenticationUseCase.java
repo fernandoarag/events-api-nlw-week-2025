@@ -6,11 +6,9 @@ import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.infrastructure.entity.UserEntity;
 import br.com.nlw.events.infrastructure.repositories.UserRepository;
 import br.com.nlw.events.interfaces.adapter.AuthAdapter;
-import br.com.nlw.events.interfaces.dtos.auth.AuthRequestDTO;
-import br.com.nlw.events.interfaces.dtos.auth.AuthResponseDTO;
-import br.com.nlw.events.interfaces.dtos.auth.RefreshTokenRequestDTO;
-import br.com.nlw.events.interfaces.dtos.auth.RegisterRequestDTO;
+import br.com.nlw.events.interfaces.dtos.auth.*;
 import br.com.nlw.events.interfaces.gateway.database.RoleGateway;
+import br.com.nlw.events.interfaces.gateway.database.UserGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,20 +33,17 @@ public class AuthenticationUseCase {
     private final AuthAdapter authAdapter;
     private final RoleGateway roleGateway;
     private final CreateUserUseCase createUserUseCase;
+    private final UserGateway userGateway;
 
     public AuthResponseDTO authenticate(AuthRequestDTO request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getUsername(),
-                        request.getPassword()
-                )
-        );
+        return getAuthResponseDTO(request.getUsername(), request.getPassword());
+    }
 
-        final UserEntity userEntity = (UserEntity) authentication.getPrincipal();
-        final String jwtToken = jwtService.generateToken(authentication);
-        final String refreshToken = jwtService.generateRefreshToken(userEntity);
+    public AuthResponseDTO authenticateWithEmail(AuthEmailRequestDTO request) {
+        final User currentUser = userGateway.findUserByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found!"));
 
-        return authAdapter.toAuthResponseDTO(userEntity, jwtToken, refreshToken);
+        return getAuthResponseDTO(currentUser.getUsername(), request.getPassword());
     }
 
     public AuthResponseDTO register(RegisterRequestDTO request) {
@@ -61,19 +56,9 @@ public class AuthenticationUseCase {
 
         final User createdUser = createUserUseCase.execute(user);
 
-        final Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        createdUser.getUsername(),
-                        request.getPassword())
-        );
-
-        final UserEntity userEntity = (UserEntity) authentication.getPrincipal();
-        final String jwtToken = jwtService.generateToken(authentication);
-        final String refreshToken = jwtService.generateRefreshToken(userEntity);
-
-        // Gera um token para o novo usuário
-        return authAdapter.toAuthResponseDTO(userEntity, jwtToken, refreshToken);
+        return getAuthResponseDTO(createdUser.getUsername(), request.getPassword());
     }
+
 
     public AuthResponseDTO refreshToken(RefreshTokenRequestDTO request) {
         final String refreshToken = request.getRefreshToken();
@@ -103,5 +88,16 @@ public class AuthenticationUseCase {
         );
 
         return authAdapter.toAuthResponseDTO(userEntity, accessToken, refreshToken);
+    }
+
+    private AuthResponseDTO getAuthResponseDTO(String username, String password) {
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(username, password));
+
+        final UserEntity userEntity = (UserEntity) authentication.getPrincipal();
+        final String jwtToken = jwtService.generateToken(authentication);
+        final String refreshToken = jwtService.generateRefreshToken(userEntity);
+
+        return authAdapter.toAuthResponseDTO(userEntity, jwtToken, refreshToken);
     }
 }

@@ -31,8 +31,11 @@ public class RoleMapper {
 
     public Set<RoleEntity> toEntity(Set<Role> roles) {
         final Set<RoleEntity> roleEntities = new HashSet<>();
-        roles.forEach(role ->
-                roleEntities.add(new RoleEntity(role.getId(), role.getName())));
+        if (roles != null) {
+            roles.forEach(role ->
+                    roleEntities.add(new RoleEntity(role.getId(), role.getName())));
+            return roleEntities;
+        }
         return roleEntities;
     }
 }

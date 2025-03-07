@@ -1,7 +1,7 @@
 package br.com.nlw.events.application.usecases.subscription.impl;
 
 import br.com.nlw.events.application.exception.custom.EventNotFoundException;
-import br.com.nlw.events.application.usecases.invite.gateway.CreateInviteUseCase;
+import br.com.nlw.events.application.usecases.invite.gateway.FindInviteBySubscriberIdAndEventIdUseCase;
 import br.com.nlw.events.application.usecases.subscription.gateway.CreateSubscriptionUseCase;
 import br.com.nlw.events.application.usecases.subscription.gateway.FindSubscriptionByEventAndSubscriberUseCase;
 import br.com.nlw.events.application.usecases.user.gateway.CreateUserUseCase;
@@ -24,20 +24,22 @@ public class CreateSubscriptionUseCaseImpl implements CreateSubscriptionUseCase 
     private final SubscriptionGateway subscriptionGateway;
 
     private final CreateUserUseCase createUserUseCase;
-    private final CreateInviteUseCase createInviteUseCase;
     private final FindSubscriptionByEventAndSubscriberUseCase findSubscriptionByEventAndSubscriberUseCase;
+    private final FindInviteBySubscriberIdAndEventIdUseCase findInviteBySubscriberIdAndEventIdUseCase;
 
     public CreateSubscriptionUseCaseImpl(
             UserGateway userGateway,
             EventGateway eventGateway,
-            SubscriptionGateway subscriptionGateway, CreateUserUseCase createUserUseCase, CreateInviteUseCase createInviteUseCase, FindSubscriptionByEventAndSubscriberUseCase findSubscriptionByEventAndSubscriberUseCase
-    ) {
+            CreateUserUseCase createUserUseCase,
+            SubscriptionGateway subscriptionGateway,
+            FindSubscriptionByEventAndSubscriberUseCase findSubscriptionByEventAndSubscriberUseCase,
+            FindInviteBySubscriberIdAndEventIdUseCase findInviteBySubscriberIdAndEventIdUseCase) {
         this.userGateway = userGateway;
         this.eventGateway = eventGateway;
         this.subscriptionGateway = subscriptionGateway;
         this.createUserUseCase = createUserUseCase;
-        this.createInviteUseCase = createInviteUseCase;
         this.findSubscriptionByEventAndSubscriberUseCase = findSubscriptionByEventAndSubscriberUseCase;
+        this.findInviteBySubscriberIdAndEventIdUseCase = findInviteBySubscriberIdAndEventIdUseCase;
     }
 
     @Override
@@ -48,30 +50,20 @@ public class CreateSubscriptionUseCaseImpl implements CreateSubscriptionUseCase 
 
         // Buscar usuário pelo e-mail do userRequest
         final User user = userGateway.findUserByEmail(userRequest.getEmail())
-                .orElseGet(() -> {
-                    // Criar novo usuário
-                    final User newUser = createUserUseCase.execute(userRequest);
-                    // Criar convite para o novo usuário
-                    createInviteUseCase.execute(new Invite(0L, event, newUser));
-                    return newUser;
-                });
+                .orElse(createUserUseCase.execute(userRequest)); // Criar novo usuário
 
-        // Buscar usuário pelo id
+        log.warn("Criar novo usuário {}", user.toString());
 
-//        final User indicatorUser = userIndicatorId != null
-//                ? userGateway.findUserById(userIndicatorId).orElse(null)
-//                : null;
-
+        // Criar convite para o novo usuário
+        final Invite invite = findInviteBySubscriberIdAndEventIdUseCase.execute(event, user);
+        log.warn("createInviteUseCase {}", invite.toString());
 
         // Verifica se para o determinado evento o usuário enviado já está inscrito
         findSubscriptionByEventAndSubscriberUseCase.execute(event, user);
 
-        log.warn("userIndicatorId -Y-Y-Y-Y-Y-Y-Y-Y-Y-Y-Y-Y-Y-Y-: {}", userIndicatorId);
-        if (userIndicatorId != null) {
-            final User indicatorUser = userGateway.findUserById(userIndicatorId);
-            log.warn("indicatorUser -X-X-X-XX-X-X-X-X-X-X-XX-X-X-X-X: {}", indicatorUser);
-            return subscriptionGateway.save(new Subscription(event, user, indicatorUser));
-        }
-        return subscriptionGateway.save(new Subscription(event, user, null));
+        // Buscar usuário de indicação pelo id
+        final User indicatorUser = userGateway.findUserById(userIndicatorId);
+
+        return subscriptionGateway.saveSubscriptionWithEvent(new Subscription(event, user, indicatorUser));
     }
 }

@@ -25,12 +25,11 @@ public class InviteController {
         return ResponseEntity.ok(getInviteHintsByPrettyNameAndUserIdUseCase.execute(eventPrettyName, userId));
     }
 
-    @PatchMapping("/hints/{eventPrettyName}/{userId}")
+    @PatchMapping("/hints/{subscriptionNumber}")
     public ResponseEntity<?> updateHints(
-            @PathVariable String eventPrettyName,
-            @PathVariable Long userId
+            @PathVariable Long subscriptionNumber
     ) {
-        incrementInviteHintByPrettyNameAndUserIdUseCase.execute(eventPrettyName, userId);
+        incrementInviteHintByPrettyNameAndUserIdUseCase.execute(subscriptionNumber);
         return ResponseEntity.noContent().build();
     }
 }
