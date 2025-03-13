@@ -1,36 +1,63 @@
 package br.com.nlw.events.interfaces.rest;
 
-import br.com.nlw.events.application.usecases.auth.AuthenticationUseCase;
-import br.com.nlw.events.domain.model.User;
-import br.com.nlw.events.interfaces.adapter.AuthAdapter;
+import br.com.nlw.events.application.usecases.auth.gateway.AuthenticationUseCase;
+import br.com.nlw.events.application.usecases.auth.gateway.RefreshTokenUseCase;
+import br.com.nlw.events.application.usecases.auth.gateway.RegisterUseCase;
+import br.com.nlw.events.application.usecases.user.gateway.UpdateUserUseCase;
+import br.com.nlw.events.domain.models.User;
+import br.com.nlw.events.interfaces.adapter.UserRestAdapter;
 import br.com.nlw.events.interfaces.dtos.auth.AuthRequestDTO;
 import br.com.nlw.events.interfaces.dtos.auth.AuthResponseDTO;
+import br.com.nlw.events.interfaces.dtos.auth.RefreshTokenRequestDTO;
 import br.com.nlw.events.interfaces.dtos.auth.RegisterRequestDTO;
+import br.com.nlw.events.interfaces.dtos.user.UserRequestDTO;
+import br.com.nlw.events.interfaces.dtos.user.UserResponseDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.naming.NoPermissionException;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
+    private final UserRestAdapter userRestAdapter;
+    private final RegisterUseCase registerUseCase;
+    private final UpdateUserUseCase updateUserUseCase;
+    private final RefreshTokenUseCase refreshTokenUseCase;
     private final AuthenticationUseCase authenticationUseCase;
-    private final AuthAdapter authAdapter;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO request) {
-        User user = authAdapter.toUser(request);
-        String token = authenticationUseCase.register(user);
-        return ResponseEntity.ok(AuthResponseDTO.builder().token(token).build());
+        final AuthResponseDTO authResponseDTO = registerUseCase.execute(request);
+        return ResponseEntity.ok(authResponseDTO);
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenRequestDTO request) {
+        final AuthResponseDTO authResponseDTO = refreshTokenUseCase.execute(request);
+        return ResponseEntity.ok(authResponseDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthRequestDTO request) {
-        String token = authenticationUseCase.authenticate(request.getUsername(), request.getPassword());
-        return ResponseEntity.ok(AuthResponseDTO.builder().token(token).build());
+    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody @Valid AuthRequestDTO request) {
+        final AuthResponseDTO authResponseDTO = authenticationUseCase.execute(request);
+        return ResponseEntity.ok(authResponseDTO);
     }
+
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<UserResponseDTO> updateUser(
+            Principal principal,
+            @PathVariable Long userId,
+            @RequestBody UserRequestDTO userDto
+    ) throws NoPermissionException {
+        final String loggedInUsername = principal.getName();
+        final User updatedUser = updateUserUseCase.execute(loggedInUsername, userId, userDto);
+        return ResponseEntity.ok(userRestAdapter.toResponse(updatedUser));
+    }
+
 }

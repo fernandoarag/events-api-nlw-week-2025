@@ -1,25 +1,27 @@
 package br.com.nlw.events.interfaces.gateway.impl;
 
-import br.com.nlw.events.application.exception.custom.EventNotFoundException;
-import br.com.nlw.events.application.exception.custom.UserIndicationNotFoundException;
-import br.com.nlw.events.domain.model.Event;
-import br.com.nlw.events.domain.model.Subscription;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.application.exception.custom.events.EventNotFoundException;
+import br.com.nlw.events.application.exception.custom.users.UserIndicationNotFoundException;
+import br.com.nlw.events.domain.models.Event;
+import br.com.nlw.events.domain.models.Subscription;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.infrastructure.entity.EventEntity;
 import br.com.nlw.events.infrastructure.entity.SubscriptionEntity;
 import br.com.nlw.events.infrastructure.entity.UserEntity;
 import br.com.nlw.events.infrastructure.mapper.SubscriptionMapper;
-import br.com.nlw.events.infrastructure.repository.EventRepository;
-import br.com.nlw.events.infrastructure.repository.SubscriptionRepository;
-import br.com.nlw.events.infrastructure.repository.UserRepository;
+import br.com.nlw.events.infrastructure.repositories.EventRepository;
+import br.com.nlw.events.infrastructure.repositories.SubscriptionRepository;
+import br.com.nlw.events.infrastructure.repositories.UserRepository;
 import br.com.nlw.events.interfaces.dtos.subscription.SubscriptionRankingItem;
 import br.com.nlw.events.interfaces.gateway.database.SubscriptionGateway;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.UUID;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SubscriptionJpaGateway implements SubscriptionGateway {
@@ -32,14 +34,21 @@ public class SubscriptionJpaGateway implements SubscriptionGateway {
     private final SubscriptionRepository subscriptionRepository;
 
     @Override
+    @Transactional
     public Subscription save(final Subscription subscription) {
         final SubscriptionEntity subscriptionEntity = subscriptionMapper.toEntity(subscription);
+        final EventEntity eventEntity = subscriptionEntity.getEvent();
+
+        if (eventEntity != null && eventEntity.getId() == null) {
+            subscriptionEntity.setEvent(eventRepository.save(eventEntity));
+        }
+
         return subscriptionMapper.toDomain(subscriptionRepository.save(subscriptionEntity));
     }
 
     @Override
     public Subscription findByEventAndSubscriber(final Event event, final User existingUser) {
-        final EventEntity eventEntity = eventRepository.findById(event.getEventId())
+        final EventEntity eventEntity = eventRepository.findById(event.getId())
                 .orElseThrow(() -> new EventNotFoundException("Event: " + event.getPrettyName() + DOES_NOT_EXIST));
 
         final UserEntity existingUserEntity = userRepository.findById(existingUser.getId())
@@ -51,7 +60,7 @@ public class SubscriptionJpaGateway implements SubscriptionGateway {
     }
 
     @Override
-    public List<SubscriptionRankingItem> getCompleteRanking(final Integer eventId) {
+    public List<SubscriptionRankingItem> getCompleteRanking(final Long eventId) {
         return subscriptionRepository.generateRanking(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event: " + eventId + DOES_NOT_EXIST));
     }

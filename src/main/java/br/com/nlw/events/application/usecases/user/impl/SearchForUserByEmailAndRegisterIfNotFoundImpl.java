@@ -1,8 +1,8 @@
 package br.com.nlw.events.application.usecases.user.impl;
 
 import br.com.nlw.events.application.usecases.user.gateway.SearchForUserByEmailAndRegisterIfNotFound;
-import br.com.nlw.events.domain.model.Event;
-import br.com.nlw.events.domain.model.User;
+import br.com.nlw.events.domain.models.Event;
+import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.gateway.database.UserGateway;
 import org.springframework.stereotype.Service;
 

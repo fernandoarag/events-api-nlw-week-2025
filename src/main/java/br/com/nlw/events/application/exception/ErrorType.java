@@ -4,11 +4,16 @@ import lombok.Getter;
 
 @Getter
 public enum ErrorType {
-    EVENT_NOT_FOUND("Event not found!"),
-    EVENT_CONFLICT("Event conflict!"),
-    SUBSCRIPTION_CONFLICT("Subscription conflict!"),
+    USER_NOT_FOUND("User not found!"),
+    USER_ALREADY_EXISTS("User already exists!"),
     USER_INDICATION_NOT_FOUND("User indication not found!"),
-    SUCCESS("Success!");
+
+    EVENT_CONFLICT("Event conflict!"),
+    EVENT_NOT_FOUND("Event not found!"),
+
+    SUBSCRIPTION_CONFLICT("Subscription conflict!"),
+
+    TOKEN_INVALID("Invalid Token");
 
     private final String title;
 

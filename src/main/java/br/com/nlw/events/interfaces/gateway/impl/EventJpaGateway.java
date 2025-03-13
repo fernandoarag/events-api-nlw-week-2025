@@ -1,9 +1,10 @@
 package br.com.nlw.events.interfaces.gateway.impl;
 
-import br.com.nlw.events.domain.model.Event;
+import br.com.nlw.events.domain.models.Event;
 import br.com.nlw.events.infrastructure.entity.EventEntity;
 import br.com.nlw.events.infrastructure.mapper.EventMapper;
-import br.com.nlw.events.infrastructure.repository.EventRepository;
+import br.com.nlw.events.infrastructure.repositories.EventRepository;
+import br.com.nlw.events.infrastructure.repositories.filter.EventFilter;
 import br.com.nlw.events.interfaces.gateway.database.EventGateway;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,13 @@ public class EventJpaGateway implements EventGateway {
 
     @Override
     public Optional<Event> findByPrettyName(final String prettyName) {
-        return eventRepository.findEventEntityByPrettyName(prettyName).map(eventMapper::toDomain);
+        return eventRepository.findEventEntityByPrettyName(prettyName)
+                .map(eventMapper::toDomain);
+    }
+
+    @Override
+    public Page<Event> filter(EventFilter eventFilter, Pageable pageable) {
+        return eventRepository.filter(eventFilter, pageable)
+                .map(eventMapper::toDomain);
     }
 }

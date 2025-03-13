@@ -6,59 +6,56 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Getter
 @Setter
 @Builder
-@ToString
-@Table(name = "tbl_user")
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity implements UserDetails {
+@AllArgsConstructor
+@ToString(exclude = "roles")
+@Table(name = "tbl_users")
+public class UserEntity implements UserDetails, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Integer id;
+    private Long id;
 
-    @Column(name = "user_name", length = 255, nullable = false)
+    @Column(length = 100, nullable = false, unique = true)
     private String username;
 
-    @Column(name = "user_email", length = 255, nullable = false, unique = true)
-    private String email;
-
-    @Column(name = "user_password", nullable = false, unique = true)
+    @Column(length = 100, nullable = false, unique = false)
     private String password;
 
-    @Column(name = "user_role", nullable = false)
-    private String role;
+    @Column(length = 100, nullable = false, unique = true)
+    private String email;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "tbl_user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<RoleEntity> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
+        // Verifica se a lista de roles não está vazia
+        if (roles != null && !roles.isEmpty()) {
+            return roles.stream()
+                    .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))  // Associe as roles com o prefixo 'ROLE_'
+                    .toList();
+        }
+        return Collections.emptyList();  // Retorna uma lista vazia se não houver roles
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
 }

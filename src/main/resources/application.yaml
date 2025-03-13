@@ -29,12 +29,10 @@ logging:
 server:
   servlet:
     context-path: /api/v1
-api:
-  path:
-    web:
-      url: http://localhost:3000
 application:
   security:
     jwt:
-      secret-key: 5b0848b3c216b781451ea039d311845768b39ecd4ac9ef5c91b5e8f1594d8d89
-      expiration: 86400000 # um dia em milissegundos
+      secret-key: a66a804043628757c4de905290ae153aa4dbead0f25c6cfa15a9d3ea8613db3653238b8bdf777d72a22731f89f7621e087e90305930e5fba3c627d4d1e810fd2ed34c631c42537842170714c6082722ef28ec73278d74a1981f7393ccedd6c57c5e530f88621cdf035fb62b0f42d920c7a9a3d8ea068a0d2c6d7538cc33c252050a15f657f870c98e1b8a7589d229c1cfcec6e5b5b95d5702ff697219c2f795be70b35ee1d9e186cfcdee481899932fd1564cc6ae3fffa7f81aea00035e4a01b46a55c0552014d4bb95a9c80dc422b7ec7d1c483f972e037ad6f5a88919e6298e1fd3fc272a57a60f6762dd4dadb02328e9baf76e3bcd23c63c40c3e25dca5fd
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000

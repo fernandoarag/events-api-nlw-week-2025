@@ -1,4 +1,6 @@
 package br.com.nlw.events.interfaces.dtos.user;
 
-public record UserResponseDTO(Integer id, String name, String email) {
+import java.util.List;
+
+public record UserResponseDTO(Long id, String username, String Password, String email, List<String> roles) {
 }

@@ -1,10 +1,14 @@
 package br.com.nlw.events.application.exception.handles;
 
-import br.com.nlw.events.application.exception.ApiErrorResponseImpl;
-import br.com.nlw.events.application.exception.custom.EventAlreadyExistsException;
-import br.com.nlw.events.application.exception.custom.EventNotFoundException;
+import br.com.nlw.events.application.exception.ApiErrorResponse;
 import br.com.nlw.events.application.exception.custom.SubscriptionConflictException;
-import br.com.nlw.events.application.exception.custom.UserIndicationNotFoundException;
+import br.com.nlw.events.application.exception.custom.auth.InvalidTokenException;
+import br.com.nlw.events.application.exception.custom.events.EventAlreadyExistsException;
+import br.com.nlw.events.application.exception.custom.events.EventNotFoundException;
+import br.com.nlw.events.application.exception.custom.users.UserAlreadyExistsException;
+import br.com.nlw.events.application.exception.custom.users.UserIndicationNotFoundException;
+import br.com.nlw.events.application.exception.custom.users.UserNotFoundException;
+import io.jsonwebtoken.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -14,36 +18,64 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private final EventExceptionHandler eventExceptionHandler;
-    private final UserIndicationExceptionHandler userIndicationExceptionHandler;
-    private final SubscriptionExceptionHandler subscriptionExceptionHandler;
+    private final UserExceptionHandler userExceptionHandler;
+    private final AuthExceptionHandler authExceptionHandler;
+    private final EventsExceptionHandler eventsExceptionHandler;
+    private final SubscriptionsExceptionHandler subscriptionsExceptionHandler;
 
-    public GlobalExceptionHandler(EventExceptionHandler eventExceptionHandler, UserIndicationExceptionHandler userIndicationExceptionHandler, SubscriptionExceptionHandler subscriptionExceptionHandler) {
-        this.eventExceptionHandler = eventExceptionHandler;
-        this.userIndicationExceptionHandler = userIndicationExceptionHandler;
-        this.subscriptionExceptionHandler = subscriptionExceptionHandler;
+    public GlobalExceptionHandler(
+            UserExceptionHandler userExceptionHandler,
+            AuthExceptionHandler authExceptionHandler,
+            EventsExceptionHandler eventsExceptionHandler,
+            SubscriptionsExceptionHandler subscriptionsExceptionHandler
+    ) {
+        this.userExceptionHandler = userExceptionHandler;
+        this.authExceptionHandler = authExceptionHandler;
+        this.eventsExceptionHandler = eventsExceptionHandler;
+        this.subscriptionsExceptionHandler = subscriptionsExceptionHandler;
     }
 
-    // Event Exceptions
+    // Events Exceptions
     @ExceptionHandler(EventNotFoundException.class)
-    public ApiErrorResponseImpl handleEventNotFoundException(EventNotFoundException e) {
-        return eventExceptionHandler.handleEventNotFoundException(e);
+    public ApiErrorResponse handleEventNotFoundException(EventNotFoundException e) {
+        return eventsExceptionHandler.handleEventNotFoundException(e);
     }
 
     @ExceptionHandler(EventAlreadyExistsException.class)
-    public ApiErrorResponseImpl handleEventAlreadyExistsException(EventAlreadyExistsException e) {
-        return eventExceptionHandler.handleEventAlreadyExistsException(e);
+    public ApiErrorResponse handleEventAlreadyExistsException(EventAlreadyExistsException e) {
+        return eventsExceptionHandler.handleEventAlreadyExistsException(e);
     }
 
-    // User Indication Exceptions
+    // Users Exceptions
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ApiErrorResponse handleUserAlreadyExistsException(UserAlreadyExistsException e) {
+        return userExceptionHandler.handleUserAlreadyExistsException(e);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ApiErrorResponse handleUserNotFoundException(UserNotFoundException e) {
+        return userExceptionHandler.handleUserNotFoundException(e);
+    }
+
     @ExceptionHandler(UserIndicationNotFoundException.class)
-    public ApiErrorResponseImpl handleEventNotFoundException(UserIndicationNotFoundException e) {
-        return userIndicationExceptionHandler.handleUserIndicationNotFoundException(e);
+    public ApiErrorResponse handleUserIndicationNotFoundException(UserIndicationNotFoundException e) {
+        return userExceptionHandler.handleUserIndicationNotFoundException(e);
     }
 
-    // Subscription Exceptions
+    // Subscriptions Exceptions
     @ExceptionHandler(SubscriptionConflictException.class)
-    public ApiErrorResponseImpl handleSubscriptionConflictException(SubscriptionConflictException e) {
-        return subscriptionExceptionHandler.handleSubscriptionConflictException(e);
+    public ApiErrorResponse handleSubscriptionConflictException(SubscriptionConflictException e) {
+        return subscriptionsExceptionHandler.handleSubscriptionConflictException(e);
+    }
+
+    // Auth Exceptions
+    @ExceptionHandler(InvalidTokenException.class)
+    public ApiErrorResponse handleInvalidTokenException(InvalidTokenException e) {
+        return authExceptionHandler.handleInvalidTokenException(e);
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    public ApiErrorResponse handleSignatureException(SignatureException e) {
+        return authExceptionHandler.handleSignatureException(e);
     }
 }
