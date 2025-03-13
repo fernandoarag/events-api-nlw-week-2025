@@ -1,7 +1,7 @@
 package br.com.nlw.events.interfaces.gateway.impl;
 
-import br.com.nlw.events.application.exception.custom.EventNotFoundException;
-import br.com.nlw.events.application.exception.custom.UserIndicationNotFoundException;
+import br.com.nlw.events.application.exception.custom.events.EventNotFoundException;
+import br.com.nlw.events.application.exception.custom.users.UserIndicationNotFoundException;
 import br.com.nlw.events.domain.models.Event;
 import br.com.nlw.events.domain.models.Subscription;
 import br.com.nlw.events.domain.models.User;
@@ -34,24 +34,15 @@ public class SubscriptionJpaGateway implements SubscriptionGateway {
     private final SubscriptionRepository subscriptionRepository;
 
     @Override
+    @Transactional
     public Subscription save(final Subscription subscription) {
         final SubscriptionEntity subscriptionEntity = subscriptionMapper.toEntity(subscription);
-        return subscriptionMapper.toDomain(subscriptionRepository.save(subscriptionEntity));
-    }
-
-    @Transactional
-    @Override
-    public Subscription saveSubscriptionWithEvent(final Subscription subscription) {
-        final SubscriptionEntity subscriptionEntity = subscriptionMapper.toEntity(subscription);
-        log.warn("SubscriptionEntity: *************************************************************{}", subscriptionEntity);
-
         final EventEntity eventEntity = subscriptionEntity.getEvent();
-        log.warn("EventEntity: *************************************************************{}", eventEntity);
 
         if (eventEntity != null && eventEntity.getId() == null) {
             subscriptionEntity.setEvent(eventRepository.save(eventEntity));
-            log.warn("eventEntity.getId() == null: *************************************************************{}", subscriptionEntity);
         }
+
         return subscriptionMapper.toDomain(subscriptionRepository.save(subscriptionEntity));
     }
 

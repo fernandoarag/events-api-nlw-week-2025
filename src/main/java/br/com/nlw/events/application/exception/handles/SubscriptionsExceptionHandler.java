@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SubscriptionExceptionHandler {
+public class SubscriptionsExceptionHandler {
 
     private static final ErrorType SUBSCRIPTION_CONFLICT = ErrorType.SUBSCRIPTION_CONFLICT;
     private static final HttpStatus CONFLICT = HttpStatus.CONFLICT;

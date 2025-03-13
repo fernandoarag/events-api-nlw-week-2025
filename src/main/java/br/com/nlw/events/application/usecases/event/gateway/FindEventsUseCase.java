@@ -5,6 +5,6 @@ import br.com.nlw.events.infrastructure.repositories.filter.EventFilter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface FindAllEventsUseCase {
+public interface FindEventsUseCase {
     Page<Event> execute(EventFilter eventFilter, Pageable pageable);
 }

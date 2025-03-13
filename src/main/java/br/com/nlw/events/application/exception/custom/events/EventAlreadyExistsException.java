@@ -1,4 +1,4 @@
-package br.com.nlw.events.application.exception.custom;
+package br.com.nlw.events.application.exception.custom.events;
 
 public class EventAlreadyExistsException extends RuntimeException {
 

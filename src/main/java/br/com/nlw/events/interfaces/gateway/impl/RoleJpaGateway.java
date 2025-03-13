@@ -31,12 +31,4 @@ public class RoleJpaGateway implements RoleGateway {
         return roleMapper.toDomain(roles);
     }
 
-    @Override
-    public Role findRoleByName(String role) {
-        RoleEntity roleEntity = roleRepository.findRoleEntityByName(role);
-        if (roleEntity == null) {
-            throw new RuntimeException("Role " + role + " not found");
-        }
-        return roleMapper.toDomain(roleEntity);
-    }
 }

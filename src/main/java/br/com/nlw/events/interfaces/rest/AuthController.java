@@ -1,13 +1,18 @@
 package br.com.nlw.events.interfaces.rest;
 
-import br.com.nlw.events.application.usecases.auth.AuthenticationUseCase;
-import br.com.nlw.events.application.usecases.user.gateway.FindUserByUsernameUseCase;
+import br.com.nlw.events.application.usecases.auth.gateway.AuthenticationUseCase;
+import br.com.nlw.events.application.usecases.auth.gateway.RefreshTokenUseCase;
+import br.com.nlw.events.application.usecases.auth.gateway.RegisterUseCase;
 import br.com.nlw.events.application.usecases.user.gateway.UpdateUserUseCase;
 import br.com.nlw.events.domain.models.User;
 import br.com.nlw.events.interfaces.adapter.UserRestAdapter;
-import br.com.nlw.events.interfaces.dtos.auth.*;
+import br.com.nlw.events.interfaces.dtos.auth.AuthRequestDTO;
+import br.com.nlw.events.interfaces.dtos.auth.AuthResponseDTO;
+import br.com.nlw.events.interfaces.dtos.auth.RefreshTokenRequestDTO;
+import br.com.nlw.events.interfaces.dtos.auth.RegisterRequestDTO;
 import br.com.nlw.events.interfaces.dtos.user.UserRequestDTO;
 import br.com.nlw.events.interfaces.dtos.user.UserResponseDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,53 +25,38 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthenticationUseCase authenticationUseCase;
     private final UserRestAdapter userRestAdapter;
+    private final RegisterUseCase registerUseCase;
     private final UpdateUserUseCase updateUserUseCase;
-    private final FindUserByUsernameUseCase findUserByUsernameUseCase;
+    private final RefreshTokenUseCase refreshTokenUseCase;
+    private final AuthenticationUseCase authenticationUseCase;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponseDTO> register(@RequestBody RegisterRequestDTO request) {
-        AuthResponseDTO authResponseDTO = authenticationUseCase.register(request);
+        final AuthResponseDTO authResponseDTO = registerUseCase.execute(request);
         return ResponseEntity.ok(authResponseDTO);
     }
 
     @PostMapping("/refresh-token")
     public ResponseEntity<AuthResponseDTO> refreshToken(@RequestBody RefreshTokenRequestDTO request) {
-        AuthResponseDTO authResponseDTO = authenticationUseCase.refreshToken(request);
+        final AuthResponseDTO authResponseDTO = refreshTokenUseCase.execute(request);
         return ResponseEntity.ok(authResponseDTO);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody AuthRequestDTO request) {
-        AuthResponseDTO authResponseDTO = authenticationUseCase.authenticate(request);
+    public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody @Valid AuthRequestDTO request) {
+        final AuthResponseDTO authResponseDTO = authenticationUseCase.execute(request);
         return ResponseEntity.ok(authResponseDTO);
     }
 
-    @PostMapping("/login/email")
-    public ResponseEntity<AuthResponseDTO> authenticateEmail(@RequestBody AuthEmailRequestDTO request) {
-        AuthResponseDTO authResponseDTO = authenticationUseCase.authenticateWithEmail(request);
-        return ResponseEntity.ok(authResponseDTO);
-    }
-
-    @PutMapping("/update/{id}")
+    @PutMapping("/update/{userId}")
     public ResponseEntity<UserResponseDTO> updateUser(
-            @PathVariable Long id,
-            @RequestBody UserRequestDTO userDto,
-            Principal principal
+            Principal principal,
+            @PathVariable Long userId,
+            @RequestBody UserRequestDTO userDto
     ) throws NoPermissionException {
-        // Obtendo o usuário autenticado
         final String loggedInUsername = principal.getName();
-        final User authenticatedUser = findUserByUsernameUseCase.execute(loggedInUsername);
-
-        // Verificando se o usuário pode alterar apenas os próprios dados
-        if (!authenticatedUser.getId().equals(id)) {
-            throw new NoPermissionException("Você não tem permissão para alterar os dados de outro usuário");
-        }
-
-        // Atualizando os dados do usuário
-        final User userRequest = userRestAdapter.toDomain(userDto);
-        final User updatedUser = updateUserUseCase.execute(id, userRequest);
+        final User updatedUser = updateUserUseCase.execute(loggedInUsername, userId, userDto);
         return ResponseEntity.ok(userRestAdapter.toResponse(updatedUser));
     }
 

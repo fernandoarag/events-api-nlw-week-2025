@@ -2,13 +2,13 @@ package br.com.nlw.events.application.exception.handles;
 
 import br.com.nlw.events.application.exception.ApiErrorResponseImpl;
 import br.com.nlw.events.application.exception.ErrorType;
-import br.com.nlw.events.application.exception.custom.EventAlreadyExistsException;
-import br.com.nlw.events.application.exception.custom.EventNotFoundException;
+import br.com.nlw.events.application.exception.custom.events.EventAlreadyExistsException;
+import br.com.nlw.events.application.exception.custom.events.EventNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EventExceptionHandler {
+public class EventsExceptionHandler {
 
     private static final ErrorType EVENT_NOT_FOUND = ErrorType.EVENT_NOT_FOUND;
     private static final ErrorType EVENT_CONFLICT = ErrorType.EVENT_CONFLICT;
